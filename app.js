@@ -4,12 +4,19 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var expressSession = require('express-session');
+var flash = require('connect-flash');
+var brypt =require('bcrypt-nodejs');
+var nodemailer = require('nodemailer')
+var mongoose = require('mongoose');
 
+var initPassport = require('./passport/init');
+var routes = require('./routes/index')(passport);
+var dbConfig = require('./db');
+var imgroutes = require('./routes/imagefile');
 
-
-var dbConfig = require('./db')
-var mongoose = require('mongoose')
-mongoose.connect(dbConfig.url)
+mongoose.connect(dbConfig.url);
 
 var app = express();
 
@@ -25,46 +32,41 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuring Passport
-var passport = require('passport');
-var expressSession = require('express-session');
+
 app.use(expressSession({secret: 'mySecretKey',
                         resave:true,
                         saveUninitialized:true}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-
  // Using the flash middleware provided by connect-flash to store messages in session
  // and displaying in templates
-var flash = require('connect-flash');
+
 app.use(flash());
 
 
 // Initialize Passport
-var initPassport = require('./passport/init');
+
 initPassport(passport);
 
-
-
-
 //To get the access for the functions defined in index.js class
-var routes = require('./routes/index')(passport);
+
 app.use('/', routes);
 
 
-var imgroutes = require('./routes/imagefile')
 app.use('/home', imgroutes);
 
-app.get('/images', function(req, res) {
+// To store images 
 //calling the function from index.js class using routes object..
-imgroutes.getImages(function(err, genres) {
-if (err) {
-throw err;
- 
-}
-res.json(genres);
- 
-});
+app.get('/images', function(req, res) {
+
+  imgroutes.getImages(function(err, genres) {
+    if (err) {
+    throw err;
+    }
+  res.json(genres);
+   
+  });
 });
 
 /// catch 404 and forwarding to error handler

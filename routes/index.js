@@ -1,5 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var async = require('async');
+var crypto = require('crypto');
+var User = require('../models/user');
+
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler 
@@ -52,6 +56,47 @@ module.exports = function(passport){
 		req.session.destroy();
 		res.redirect('/');
 	});
+
+	/* Handle forgot GET */
+
+	router.get('/forgot', function(req,res) {
+		res.render('forgot', {
+			user: req.user
+		});
+	});
+
+	router.post('/forgot', function(req, res, next) {
+	//	console.log('here is forgot')
+		async.waterfall([
+			function (done) {
+				crypto.randomBytes(20, function(err, buf){
+					var token = buf.toString('hex');
+					done(err,token);
+				});
+			},
+			function(token,done){
+				User.findOne({email:req.body.email}, function(err,user){
+					console.log(req.body.email, user)
+					if(!user){
+						console.log(err)
+						req.flash('error', 'No account with that email address exists');
+						return res.redirect('/forgot');
+					}
+					user.resetPasswordToken = token;
+        	user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+        	user.save(function(err){
+        		done(err,token,user);
+        	})
+				})
+			}
+
+
+			])
+
+
+	});
+	
 
 	return router;
 }
