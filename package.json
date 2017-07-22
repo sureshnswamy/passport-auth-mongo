@@ -1,5 +1,5 @@
 {
-  "name": "eRez-test",
+  "name": "passport_auth_mongo_app",
   "version": "0.0.1",
   "private": true,
   "scripts": {

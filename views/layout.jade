@@ -2,11 +2,14 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
+    //- link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
+    script(src='//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
+    //- link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css')
    body
   
-   .navbar.navbar-inverse.navbar-static-top(role='navigation')
+   .navbar.navbar-inverse.navbar-static-top
       .container
         .navbar-header
           button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
@@ -26,19 +29,19 @@ html
               li.active
                 a(href='/signup') Signup
 
+     
+        //- if messages.error
+        //-   .alert.alert-danger
+        //-     div= messages.error
+        //- if messages.info
+        //-   .alert.alert-info
+        //-     div= messages.info
+        //- if messages.success
+        //-   .alert.alert-success
+        //-     div= messages.success
+        .container
+        block content
 
-  //-   .container
-  //- if messages.error
-  //-   .alert.alert-danger
-  //-     div= messages.error
-  //- if messages.info
-  //-   .alert.alert-info
-  //-     div= messages.info
-  //- if messages.success
-  //-   .alert.alert-success
-  //-     div= messages.success
 
-
-  block content
   
-  //- a.btn.btn-link(href='/forgot') Forgot Password?
+  

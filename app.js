@@ -7,8 +7,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var expressSession = require('express-session');
 var flash = require('connect-flash');
-var brypt =require('bcrypt-nodejs');
-var nodemailer = require('nodemailer')
+
 var mongoose = require('mongoose');
 
 var initPassport = require('./passport/init');
@@ -94,10 +93,10 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+    // res.render('error', {
+    //     message: err.message,
+    //     error: {}
+    // });
 });
 
 
